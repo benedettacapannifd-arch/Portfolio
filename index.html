@@ -489,12 +489,18 @@
                 gap: 32px;
             }
 
-            .about-text {
-                text-align: left !important;
+            /* Testi di About e Contacts: stessa composizione del desktop (stessi a capo,
+               allineati a destra), rimpiccioliti finché la riga più lunga
+               (78 caratteri Courier = 47em) riempie la larghezza del telefono */
+            html {
+                -webkit-text-size-adjust: 100%;
             }
 
-            .about-text br {
-                display: none;
+            #aboutOverlay .about-text,
+            #aboutOverlay .overlay-footer-row > .base-text,
+            #aboutOverlay .about-credits > span.base-text,
+            #contactsOverlay .flex-1 .base-text {
+                font-size: min(8px, calc((100vw - 36px) / 47)) !important;
             }
 
             .overlay-footer-row.items-end {
