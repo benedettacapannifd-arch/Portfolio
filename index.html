@@ -376,6 +376,150 @@
             justify-content: space-between;
             align-items: center;
         }
+
+        /* ========================================================
+           4. VERSIONE MOBILE (sotto i 768px — il desktop resta invariato)
+           ======================================================== */
+        @media (max-width: 768px) {
+            body, html {
+                -webkit-tap-highlight-color: transparent;
+            }
+
+            .brand-text {
+                font-size: 11px !important;
+            }
+
+            .base-text,
+            .card-overlay-text * {
+                font-size: 10px !important;
+            }
+
+            .star-hover-btn,
+            .brand-text {
+                white-space: nowrap;
+            }
+
+            /* Altezza reale dello schermo, esclusa la barra di Safari */
+            .landing-view,
+            .main-stage,
+            .left-editorial-pane,
+            .right-feed-pane,
+            .editorial-overlay {
+                height: 100dvh;
+            }
+
+            .landing-view,
+            .editorial-overlay {
+                padding: 16px 18px 24px;
+            }
+
+            /* Menu su una riga: nome a sinistra, voci a destra */
+            .landing-header-grid,
+            .overlay-nav-grid {
+                display: flex;
+                align-items: center;
+                gap: 14px;
+            }
+
+            .landing-header-grid > :first-child,
+            .overlay-nav-grid > :first-child {
+                margin-right: auto;
+            }
+
+            .landing-header-right,
+            .overlay-nav-right {
+                width: auto;
+                gap: 14px;
+            }
+
+            /* Design / Archive: colonna unica di foto tra barra in alto e in basso */
+            .left-editorial-pane {
+                position: fixed;
+                inset: 0;
+                padding: 0;
+                background: transparent;
+            }
+
+            /* Lo spazio vuoto centrale non deve bloccare tocchi e scorrimento sulle foto */
+            .left-editorial-pane > .flex-1 {
+                pointer-events: none;
+            }
+
+            /* A destra lascia spazio ad "Archive About" (barra fissa sovrapposta):
+               12 caratteri Courier a 10px = 72px + spazi */
+            .left-header-row {
+                width: 100%;
+                height: 48px;
+                padding: 0 calc(18px + 72px + 28px) 0 18px;
+                justify-content: flex-start;
+                background: #ffffff;
+            }
+
+            .left-header-row > :first-child {
+                margin-right: auto;
+            }
+
+            .right-header-bar {
+                top: 0;
+                right: 18px;
+                width: auto;
+                height: 48px;
+                gap: 14px;
+            }
+
+            .left-footer-row {
+                height: 40px;
+                padding: 0 18px;
+                justify-content: space-between;
+                background: #ffffff;
+            }
+
+            .right-feed-pane {
+                padding: 48px 0 40px;
+                scroll-padding-top: 48px;
+            }
+
+            .stream-card {
+                min-height: 0;
+            }
+
+            /* About e Contacts: il contenuto scorre se non entra nello schermo */
+            .editorial-overlay {
+                overflow-y: auto;
+                gap: 32px;
+            }
+
+            .about-text {
+                text-align: left !important;
+            }
+
+            .about-text br {
+                display: none;
+            }
+
+            .overlay-footer-row.items-end {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 24px;
+            }
+
+            .overlay-footer-row .about-credits {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+        }
+
+        /* Didascalie: hover col mouse, tocco sul telefono */
+        @media (hover: none) {
+            .stream-card:hover .card-overlay-text {
+                opacity: 0;
+            }
+        }
+
+        .stream-card.show-caption .card-overlay-text {
+            opacity: 1;
+        }
     </style>
 </head>
 <body class="bg-white select-none">
@@ -540,7 +684,7 @@
 
         <div class="w-full flex-1 flex flex-col justify-center">
             <div class="w-full flex justify-end">
-                <div class="base-text leading-[1.65] max-w-[720px] text-right space-y-4">
+                <div class="about-text base-text leading-[1.65] max-w-[720px] text-right space-y-4">
                     <p>
                         Moving between consultancy, collaboration and personal exploration.<br>
                         I believe in open-ended practices guided by curiosity and the desire<br>
@@ -572,7 +716,7 @@
                 <div><span class="star-hover">MATTIAS GOLLIN</span></div>
                 <div><span class="star-hover">BENZENE.LTD</span></div>
             </div>
-            <div class="flex items-center gap-12">
+            <div class="about-credits flex items-center gap-12">
                 <button id="aboutToContactsBtn" class="star-hover-btn base-text" title="Contacts">
                     <span>Contacts</span>
                 </button>
@@ -1235,7 +1379,13 @@
             // Navigazione da About
             document.getElementById('aboutToDesignBtn').addEventListener('click', () => showSplitSection('design'));
             document.getElementById('aboutToArchiveBtn').addEventListener('click', () => showSplitSection('archive'));
-            document.getElementById('aboutToContactsBtn').addEventListener('click', showAboutView);
+            document.getElementById('aboutToContactsBtn').addEventListener('click', showContactsView);
+
+            // Didascalie al tocco (telefono): un tocco mostra, un altro nasconde
+            continuousStream.addEventListener('click', (e) => {
+                const card = e.target.closest('.stream-card');
+                if (card) card.classList.toggle('show-caption');
+            });
 
             // Tasto Esc per tornare sempre alla Landing
             window.addEventListener('keydown', (e) => {
