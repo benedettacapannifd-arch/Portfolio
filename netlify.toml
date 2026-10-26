@@ -1,0 +1,9 @@
+# Sito statico: nessuna build, Netlify pubblica la cartella così com'è
+[build]
+  publish = "."
+
+# Le immagini cambiano raramente: cache lunga nel browser
+[[headers]]
+  for = "/IMMAGINI/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"

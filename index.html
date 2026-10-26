@@ -1,0 +1,1249 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Benedetta Capanni — Portfolio</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --brand-color: #000000;
+        }
+
+        * {
+            font-family: 'Courier', 'Courier New', Courier, monospace !important;
+            font-weight: 400 !important;
+            -webkit-font-smoothing: antialiased;
+            color: #000000;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-size: 6pt;
+            line-height: 1.45;
+            background-color: #ffffff;
+            color: #000000;
+            overflow: hidden;
+        }
+
+        .brand-text {
+            font-size: 8pt !important;
+            line-height: 1.2 !important;
+        }
+
+        .base-text {
+            font-size: 6pt !important;
+        }
+
+        ::selection {
+            background-color: rgba(0, 0, 0, 0.08);
+            color: #000000;
+        }
+
+        /* Indicatore a stellina (*) centrato sotto tutti i testi su hover */
+        .star-hover,
+        .star-hover-btn {
+            position: relative;
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            background: transparent;
+            border: none;
+            padding: 0;
+            user-select: none;
+            text-decoration: none;
+        }
+
+        .star-hover::after,
+        .star-hover-btn::after {
+            content: '*';
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(0px);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.18s cubic-bezier(0.16, 1, 0.3, 1), transform 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+            font-size: 7pt !important;
+            line-height: 1 !important;
+            margin-top: 3px;
+            color: #000000 !important;
+        }
+
+        .star-hover:hover::after,
+        .star-hover-btn:hover::after,
+        .star-hover-btn.active::after {
+            opacity: 1;
+            transform: translateX(-50%) translateY(2px);
+        }
+
+        /* ========================================================
+           1. LANDING PAGE: RETTANGOLO CENTRALE 12.6cm x 9.5cm
+           ======================================================== */
+        .landing-view {
+            position: fixed;
+            inset: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #ffffff;
+            z-index: 50;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 26px 36px;
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+
+        .landing-view.hidden-view {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .landing-header-grid {
+            width: 100%;
+            display: grid;
+            grid-template-columns: 37% 30% 33%;
+            align-items: center;
+        }
+
+        .landing-header-right {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        /* Rettangolo centrale di 12,6cm x 9,5cm con scorrimento autonomo */
+        .landing-center-stage {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 9.5cm;
+            height: 12.6cm;
+            max-width: 85vw;
+            max-height: 80vh;
+            overflow: hidden;
+            background: #ffffff;
+            box-shadow: 0 0 0 1px rgba(0,0,0,0.04);
+            cursor: default;
+        }
+
+        .slideshow-slide {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+            pointer-events: none;
+        }
+
+        .slideshow-slide.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .slideshow-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .landing-footer-row {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* ========================================================
+           2. SPLIT SCREEN PER DESIGN E ARCHIVE
+           ======================================================== */
+        .main-stage {
+            position: fixed;
+            inset: 0;
+            display: grid;
+            grid-template-columns: 50% 50%;
+            width: 100vw;
+            height: 100vh;
+            background: #ffffff;
+            z-index: 20;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.4s ease, visibility 0.4s ease;
+        }
+
+        .main-stage.active-stage {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        @media (max-width: 768px) {
+            .main-stage {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Colonna Sinistra Fissa Minimal */
+        .left-editorial-pane {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 26px 36px;
+            background: #ffffff;
+            position: relative;
+            z-index: 25;
+            pointer-events: none;
+        }
+
+        .left-editorial-pane * {
+            pointer-events: auto;
+        }
+
+        .left-header-row {
+            display: flex;
+            justify-content: space-between;
+            width: 74%;
+            align-items: center;
+        }
+
+        .left-footer-row {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+        }
+
+        /* Colonna Destra a Scorrimento Verticale Continuo a Filo Schermo (top: 0) */
+        .right-feed-pane {
+            height: 100vh;
+            width: 100%;
+            overflow-y: scroll;
+            overflow-x: hidden;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+            position: relative;
+            background: #ffffff;
+        }
+
+        .right-feed-pane::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Header Destro Sovrapposto */
+        .right-header-bar {
+            position: fixed;
+            top: 26px;
+            right: 36px;
+            width: 44vw;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 30;
+            pointer-events: none;
+        }
+
+        .right-header-bar * {
+            pointer-events: auto;
+        }
+
+        .continuous-stream {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        .stream-card {
+            width: 100%;
+            min-height: 85vh;
+            aspect-ratio: 3 / 4;
+            position: relative;
+            cursor: default;
+            margin: 0;
+            padding: 0;
+            background-color: #fafafa;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .stream-card img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
+            margin: 0;
+            padding: 0;
+            pointer-events: auto;
+            transition: opacity 0.3s ease;
+        }
+
+        /* TESTO CENTRATO SOPRA ALL'IMMAGINE DI DESTRA (RUOTATO 90° IN SENSO ANTIORARIO, ROSSO ACCESO, SOLO SU HOVER) */
+        .card-overlay-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-90deg);
+            transform-origin: center center;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 15;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+        .stream-card:hover .card-overlay-text {
+            opacity: 1;
+        }
+
+        .card-overlay-text * {
+            color: #ff0000 !important;
+            font-family: 'Courier', 'Courier New', Courier, monospace !important;
+            font-size: 6pt !important;
+            line-height: 1.5 !important;
+            text-align: center !important;
+            text-shadow: 0 0 1px rgba(255, 255, 255, 0.4);
+        }
+
+        .card-overlay-title {
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .card-overlay-desc {
+            max-width: 420px;
+            margin: 0 auto;
+        }
+
+        /* ========================================================
+           3. OVERLAYS (CONTACTS & ABOUT)
+           ======================================================== */
+        .editorial-overlay {
+            position: fixed;
+            inset: 0;
+            background: #ffffff;
+            z-index: 80;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 26px 36px;
+        }
+
+        .editorial-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .overlay-nav-grid {
+            width: 100%;
+            display: grid;
+            grid-template-columns: 37% 30% 33%;
+            align-items: center;
+        }
+
+        .overlay-nav-right {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+        }
+
+        .overlay-footer-row {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
+</head>
+<body class="bg-white select-none">
+
+    <!-- 1. LANDING PAGE INIZIALE CON RETTANGOLO CENTRALE 12.6cm x 9.5cm -->
+    <div id="landingView" class="landing-view">
+        <div class="landing-header-grid">
+            <div>
+                <button class="btn-home star-hover-btn brand-text uppercase" title="Home">
+                    <span>BENEDETTA CAPANNI *</span>
+                </button>
+            </div>
+            <div>
+                <button id="landingToDesignBtn" class="star-hover-btn base-text" title="Design">
+                    <span>Design</span>
+                </button>
+            </div>
+            <div class="landing-header-right">
+                <button id="landingToArchiveBtn" class="star-hover-btn base-text" title="Archive">
+                    <span>Archive</span>
+                </button>
+                <button id="landingToAboutBtn" class="star-hover-btn base-text" title="About">
+                    <span>About</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Rettangolo centrale di immagini (12.6cm x 9.5cm) a scorrimento autonomo sparso -->
+        <div class="landing-center-stage" id="landingSlideshowContainer">
+            <!-- Inserito dinamicamente da JS -->
+        </div>
+
+        <div class="landing-footer-row">
+            <button id="landingToContactsBtn" class="star-hover-btn base-text" title="Contacts">
+                <span>Contacts</span>
+            </button>
+            <span class="star-hover base-text">2026 © All Rights Reserved</span>
+        </div>
+    </div>
+
+    <!-- 2. SCHERMATA SPLIT-SCREEN (DESIGN & ARCHIVE) -->
+    <div id="mainStage" class="main-stage">
+        
+        <!-- Colonna Sinistra Fissa Minimal (Senza box di testo a sinistra) -->
+        <div class="left-editorial-pane">
+            <div class="left-header-row">
+                <button class="btn-home star-hover-btn brand-text uppercase" title="Home">
+                    <span>BENEDETTA CAPANNI *</span>
+                </button>
+                <button id="navDesignBtn" class="star-hover-btn base-text" title="Design">
+                    <span id="labelDesign">Design</span>
+                </button>
+            </div>
+
+            <!-- Spazio centrale pulito ed arioso a sinistra -->
+            <div class="flex-1"></div>
+
+            <!-- Footer Sinistro -->
+            <div class="left-footer-row">
+                <button id="navContactsBtn" class="star-hover-btn base-text" title="Contacts">
+                    <span>Contacts</span>
+                </button>
+                <span class="star-hover base-text">2026 © All Rights Reserved</span>
+            </div>
+        </div>
+
+        <!-- Header Destro Sovrapposto per Archive e About -->
+        <div class="right-header-bar">
+            <button id="navArchiveBtn" class="star-hover-btn base-text" title="Archive">
+                <span id="labelArchive">Archive</span>
+            </button>
+            <button id="navAboutBtn" class="star-hover-btn base-text" title="About">
+                <span>About</span>
+            </button>
+        </div>
+
+        <!-- Colonna Destra a Scorrimento Verticale Continuo -->
+        <div class="right-feed-pane" id="rightFeedPane">
+            <div class="continuous-stream" id="continuousStream"></div>
+        </div>
+    </div>
+
+    <!-- 3. OVERLAY CONTACTS -->
+    <div id="contactsOverlay" class="editorial-overlay select-none">
+        <div class="overlay-nav-grid">
+            <div>
+                <button class="btn-home star-hover-btn brand-text uppercase" title="Home">
+                    <span>BENEDETTA CAPANNI *</span>
+                </button>
+            </div>
+            <div>
+                <button id="contactsToDesignBtn" class="star-hover-btn base-text" title="Design">
+                    <span>Design</span>
+                </button>
+            </div>
+            <div class="overlay-nav-right">
+                <button id="contactsToArchiveBtn" class="star-hover-btn base-text" title="Archive">
+                    <span>Archive</span>
+                </button>
+                <button id="contactsToAboutBtn" class="star-hover-btn base-text" title="About">
+                    <span>About</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="w-full flex-1 flex flex-col justify-center">
+            <div class="base-text leading-relaxed space-y-4 max-w-md">
+                <div class="star-hover">* Benedetta Capanni (b.1999/Italy)</div>
+                <div class="space-y-2 uppercase pt-2">
+                    <div>
+                        PHONE 
+                        <a href="tel:+393459918182" class="star-hover-btn tracking-tight">
+                            <span>+39 3459918182</span>
+                        </a>
+                    </div>
+                    <div>
+                        EMAIL 
+                        <a href="mailto:benedettacapanni.fd@gmail.com" class="star-hover-btn tracking-tight lowercase">
+                            <span>benedettacapanni.fd@gmail.com</span>
+                        </a>
+                    </div>
+                    <div>
+                        IG 
+                        <a href="https://instagram.com/benedettacapanni" target="_blank" rel="noopener noreferrer" class="star-hover-btn tracking-tight lowercase">
+                            <span>@benedettacapanni</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="overlay-footer-row">
+            <span class="base-text star-hover-btn active">
+                <span>Contacts</span>
+            </span>
+            <span class="star-hover base-text">2026 © All Rights Reserved</span>
+        </div>
+    </div>
+
+    <!-- 4. OVERLAY ABOUT -->
+    <div id="aboutOverlay" class="editorial-overlay select-none">
+        <div class="overlay-nav-grid">
+            <div>
+                <button class="btn-home star-hover-btn brand-text uppercase" title="Home">
+                    <span>BENEDETTA CAPANNI *</span>
+                </button>
+            </div>
+            <div>
+                <button id="aboutToDesignBtn" class="star-hover-btn base-text" title="Design">
+                    <span>Design</span>
+                </button>
+            </div>
+            <div class="overlay-nav-right">
+                <button id="aboutToArchiveBtn" class="star-hover-btn base-text" title="Archive">
+                    <span>Archive</span>
+                </button>
+                <span class="base-text star-hover-btn active">
+                    <span>About</span>
+                </span>
+            </div>
+        </div>
+
+        <div class="w-full flex-1 flex flex-col justify-center">
+            <div class="w-full flex justify-end">
+                <div class="base-text leading-[1.65] max-w-[720px] text-right space-y-4">
+                    <p>
+                        Moving between consultancy, collaboration and personal exploration.<br>
+                        I believe in open-ended practices guided by curiosity and the desire<br>
+                        to keep learning through making, adapting and workig together.
+                    </p>
+                    <p>
+                        With a background in denim and heavy fabrics design, I support brands through<br>
+                        garment conception, pattern cutting and small-scale prototyping.
+                    </p>
+                    <p>
+                        My hands-on approach combines traditional techniques with a more intuitive,<br>
+                        anarchic way of working, shaped by the uniqueness of each project and the<br>
+                        people involved.
+                    </p>
+                    <p>
+                        Beyond fashion, I collaborate with artists and creatives to shape environments<br>
+                        and explore the visual coherence of their projects.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="overlay-footer-row items-end">
+            <div class="base-text space-y-1 uppercase leading-tight">
+                <div><span class="star-hover">ETRO</span></div>
+                <div><span class="star-hover">NEIL BARRETT</span></div>
+                <div><span class="star-hover">V*******S</span></div>
+                <div><span class="star-hover">ACNE STUDIOS</span></div>
+                <div><span class="star-hover">MATTIAS GOLLIN</span></div>
+                <div><span class="star-hover">BENZENE.LTD</span></div>
+            </div>
+            <div class="flex items-center gap-12">
+                <button id="aboutToContactsBtn" class="star-hover-btn base-text" title="Contacts">
+                    <span>Contacts</span>
+                </button>
+                <span class="star-hover base-text">2026 © All Rights Reserved | Web Developer Pietro Bergamaschi | UX Strategist Samuele Rosi</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /* =========================================================================
+           👇 1. SEZIONE DESIGN: INSERISCI QUI LE TUE IMMAGINI (20 LOOK)
+           Puoi inserire sia link web ("https://...") che file locali ("./immagini/look1.jpg")
+           ========================================================================= */
+        const designItems = [
+            {
+                id: 'design-01',
+                source: 'design',
+                title: 'INTUITIVE CORSET PATTERN MAKING',
+                year: '2025',
+                description: "✯",
+                image: 'IMMAGINI/design/01.jpeg'
+            },
+            {
+                id: 'design-02',
+                source: 'design',
+                title: 'NEIL BARRETT',
+                year: '2023',
+                description: 'Padded shoulder t-shirt draping',
+                image: 'IMMAGINI/design/02.jpg'
+            },
+            {
+                id: 'design-03',
+                source: 'design',
+                title: '✯',
+                year: '2025',
+                description: 'Coated lace',
+                image: 'IMMAGINI/design/03.jpg'
+            },
+            {
+                id: 'design-04',
+                source: 'design',
+                title: '',
+                year: '',
+                description: '',
+                image: 'IMMAGINI/design/04.jpg'
+            },
+            {
+                id: 'design-05',
+                source: 'design',
+                title: '✯',
+                year: '2025',
+                description: '',
+                image: 'IMMAGINI/design/05.jpg'
+            },
+            {
+                id: 'design-06',
+                source: 'design',
+                title: '✯',
+                year: '2025',
+                description: '',
+                image: 'IMMAGINI/design/06.jpg'
+            },
+            {
+                id: 'design-07',
+                source: 'design',
+                title: 'MAXIM THE 34',
+                year: '2026',
+                description: 'Window design with Francesca Ricci',
+                image: 'IMMAGINI/design/07.jpg'
+            },
+            {
+                id: 'design-08',
+                source: 'design',
+                title: '',
+                year: '',
+                description: '',
+                image: 'IMMAGINI/design/08.jpg'
+            },
+            {
+                id: 'design-09',
+                source: 'design',
+                title: 'NEIL BARRETT',
+                year: '2023',
+                description: 'RTW design shape exploration',
+                image: 'IMMAGINI/design/09.jpeg'
+            },
+            {
+                id: 'design-10',
+                source: 'design',
+                title: 'ACNE STUDIOS',
+                year: '2024',
+                description: 'TLO design shape exploration',
+                image: 'IMMAGINI/design/010.jpeg'
+            },
+            {
+                id: 'design-11',
+                source: 'design',
+                title: 'ACNE STUDIOS',
+                year: '2024',
+                description: 'TLO denim',
+                image: 'IMMAGINI/design/011.JPG'
+            },
+            {
+                id: 'design-12',
+                source: 'design',
+                title: '',
+                year: '',
+                description: '',
+                image: 'IMMAGINI/design/012.jpeg'
+            },
+            {
+                id: 'design-13',
+                source: 'design',
+                title: 'ACNE STUDIOS',
+                year: '2025',
+                description: '',
+                image: 'IMMAGINI/design/013.jpg'
+            },
+            {
+                id: 'design-14',
+                source: 'design',
+                title: '',
+                year: '',
+                description: '',
+                image: 'IMMAGINI/design/014.jpg'
+            },
+            {
+                id: 'design-15',
+                source: 'design',
+                title: '✯',
+                year: '2025',
+                description: '',
+                image: 'IMMAGINI/design/015.jpg'
+            },
+            {
+                id: 'design-16',
+                source: 'design',
+                title: 'NEIL BARRETT',
+                year: '2023',
+                description: 'Show venue',
+                image: 'IMMAGINI/design/016.jpg'
+            },
+            {
+                id: 'design-17',
+                source: 'design',
+                title: 'ACNE STUDIOS',
+                year: '2025',
+                description: 'TLO denim',
+                image: 'IMMAGINI/design/017.jpg'
+            },
+            {
+                id: 'design-18',
+                source: 'design',
+                title: '',
+                year: '',
+                description: '',
+                image: 'IMMAGINI/design/018.jpg'
+            },
+            {
+                id: 'design-19',
+                source: 'design',
+                title: 'MAXIM THE 34',
+                year: '2026',
+                description: 'Window design with Francesca Ricci',
+                image: 'IMMAGINI/design/019.jpg'
+            },
+            {
+                id: 'design-20',
+                source: 'design',
+                title: 'ACNE STUDIOS',
+                year: '2024',
+                description: 'Rhinestone denim',
+                image: 'IMMAGINI/design/020.jpg'
+            },
+            {
+                id: 'design-21',
+                source: '',
+                title: '✯',
+                year: '2024',
+                description: 'Design notes',
+                image: 'IMMAGINI/design/021.jpg'
+            },
+            {
+                id: 'design-22',
+                source: 'design',
+                title: '',
+                year: '',
+                description: '',
+                image: 'IMMAGINI/design/022.jpg'
+            },
+            {
+                id: 'design-23',
+                source: 'design',
+                title: '',
+                year: '',
+                description: '',
+                image: 'IMMAGINI/design/023.jpg'
+            },
+            {
+                id: 'design-24',
+                source: 'design',
+                title: '',
+                year: '',
+                description: '',
+                image: 'IMMAGINI/design/024.jpg'
+            },
+            {
+                id: 'design-25',
+                source: 'design',
+                title: '',
+                year: '',
+                description: '',
+                image: 'IMMAGINI/design/025.jpg'
+            },
+            {
+                id: 'design-26',
+                source: 'design',
+                title: '',
+                year: '',
+                description: '',
+                image: 'IMMAGINI/design/026.jpg'
+            },
+            {
+                id: 'design-27',
+                source: 'design',
+                title: 'FRENCH FRIES MAGAZNE',
+                year: '2022',
+                description: 'Editorial-"Because I feel Blind"',
+                image: 'IMMAGINI/design/027.jpg'
+            },
+        ];
+
+        /* =========================================================================
+           👇 2. SEZIONE ARCHIVE: INSERISCI QUI LE TUE IMMAGINI (30 LOOK)
+           Puoi inserire sia link web ("https://...") che file locali ("./immagini/archive1.jpg")
+           ========================================================================= */
+        const archiveItems = [
+            {
+                id: 'archive-01',
+                source: 'archive',
+                title: 'PEOPLE IN THE STREET 01',
+                year: '2025',
+                description: "Arles-43,67656°N,4,62813°E",
+                image: 'IMMAGINI/archive/1.jpeg'
+            },
+            {
+                id: 'archive-02',
+                source: 'archive',
+                title: 'PEOPLE IN THE STREET 02',
+                year: '2022',
+                description: 'Milano-45,47690°N,9,23009°E',
+                image: 'IMMAGINI/archive/2.jpg'
+            },
+            {
+                id: 'archive-03',
+                source: 'archive',
+                title: 'PEOPLE IN THE STREET 03',
+                year: '2024',
+                description: 'Cesenatico-44,19741°N,12,39790°E',
+                image: 'IMMAGINI/archive/3.jpeg'
+            },
+            {
+                id: 'archive-04',
+                source: 'archive',
+                title: 'PEOPLE IN THE STREET 04',
+                year: '2025',
+                description: 'Romagna Shopping Valley-44,15935°N,12,43043°E',
+                image: 'IMMAGINI/archive/4.jpeg'
+            },
+            {
+                id: 'archive-05',
+                source: 'archive',
+                title: 'PEOPLE IN THE STREET 05',
+                year: '2023',
+                description: 'Milano-45,48430°N,9,18670°E',
+                image: 'IMMAGINI/archive/5.jpeg'
+            },
+            {
+                id: 'archive-06',
+                source: 'archive',
+                title: 'PEOPLE IN THE STREET 06',
+                year: '2024',
+                description: 'Stockholm-Granen,59,34271°N,18,07540°E',
+                image: 'IMMAGINI/archive/6.jpg'
+            },
+            {
+                id: 'archive-07',
+                source: 'archive',
+                title: 'PEOPLE IN THE STREET 07',
+                year: '2022',
+                description: 'London-51,56546°N,0,10526°O',
+                image: 'IMMAGINI/archive/7.jpg'
+            },
+            {
+                id: 'archive-08',
+                source: 'archive',
+                title: 'PEOPLE IN THE STREET 08',
+                year: '2022',
+                description: 'London,Standsted-51,89239°N,0,26102°E',
+                image: 'IMMAGINI/archive/8.jpeg'
+            },
+            {
+                id: 'archive-09',
+                source: 'archive',
+                title: 'PEOPLE IN THE STREET 09',
+                year: '2026',
+                description: 'Stockholm-59,32055°N,18,07192°E',
+                image: 'IMMAGINI/archive/9.jpg'
+            },
+            {
+                id: 'archive-10',
+                source: 'archive',
+                title: 'PEOPLE IN THE STREET 10',
+                year: '2024',
+                description: 'Johanneshov-Faludden-59,28689°N,18,11501°E',
+                image: 'IMMAGINI/archive/10.jpeg'
+            },
+            {
+                id: 'archive-11',
+                source: 'archive',
+                title: 'PEOPLE IN THE STREET 11',
+                year: '2026',
+                description: 'Cesenatico-44,21245°N,12,39152°E',
+                image: 'IMMAGINI/archive/11.jpg'
+            },
+            {
+                id: 'archive-12',
+                source: 'archive',
+                title: 'PEOPLE IN THE STREET 12',
+                year: '2026',
+                description: 'Casablanca-33,60132°N,7,62144°O',
+                image: 'IMMAGINI/archive/12.jpeg'
+            },
+            {
+                id: 'archive-13',
+                source: 'archive',
+                title: 'PEOPLE IN THE STREET 13',
+                year: '2025',
+                description: 'Savignano-44,09127°N,12,37489°E',
+                image: 'IMMAGINI/archive/13.jpeg'
+            },
+            {
+                id: 'archive-14',
+                source: 'archive',
+                title: 'PEOPLE IN THE STREET 14',
+                year: '2025',
+                description: 'Chiaravalle-43,62600°N,13,33710°E',
+                image: 'IMMAGINI/archive/14.jpeg'
+            },
+            {
+                id: 'archive-15',
+                source: 'archive',
+                title: 'PEOPLE IN THE STREET 15',
+                year: '2024',
+                description: 'Stockholm-Katarina-59,31253°N,18,08146°E',
+                image: 'IMMAGINI/archive/15.jpg'
+            },
+            {
+                id: 'archive-16',
+                source: 'archive',
+                title: 'PEOPLE IN THE STREET 16',
+                year: '2026',
+                description: 'Milano-45,46818°N,9,17596°E',
+                image: 'IMMAGINI/archive/16.jpg'
+            },
+            {
+                id: 'archive-17',
+                source: 'archive',
+                title: 'PEOPLE IN THE STREET 17',
+                year: '2025',
+                description: 'Zurich-47,37376°N,8,54473°E',
+                image: 'IMMAGINI/archive/17.jpg'
+            },
+            {
+                id: 'archive-18',
+                source: 'archive',
+                title: 'PEOPLE IN THE STREET 18',
+                year: '2026',
+                description: 'Odenplan-59,34290°N,18,04858°E',
+                image: 'IMMAGINI/archive/18.jpeg'
+            },
+            {
+                id: 'archive-19',
+                source: 'archive',
+                title: 'PEOPLE IN THE STREET 19',
+                year: '2026',
+                description: 'Allmänna Gränd-59,32415°N,18,09486°E',
+                image: 'IMMAGINI/archive/19.jpg'
+            },
+            {
+                id: 'archive-20',
+                source: 'archive',
+                title: 'PEOPLE IN THE STREET 20',
+                year: '2024',
+                description: 'Stockholm-59,31425°N,18,07347°E',
+                image: 'IMMAGINI/archive/20.jpg'
+            },
+            {
+                id: 'archive-21',
+                source: 'archive',
+                title: 'PEOPLE IN THE STREET 21',
+                year: '2025',
+                description: 'Santarcangelo-44,06348°N,12,44610°E',
+                image: 'IMMAGINI/archive/21.jpg'
+            },
+            {
+                id: 'archive-22',
+                source: 'archive',
+                title: 'PEOPLE IN THE STREET 22',
+                year: '2025',
+                description: 'Zürch-47,36174°N,8,51088°E',
+                image: 'IMMAGINI/archive/22.jpg'
+            },
+            {
+                id: 'archive-23',
+                source: 'archive',
+                title: 'PEOPLE IN THE STREET 23',
+                year: '2025',
+                description: 'Piazza Santa Francesca Romana-45,47640°N,9,20820°E',
+                image: 'IMMAGINI/archive/23.jpg'
+            },
+            {
+                id: 'archive-24',
+                source: 'archive',
+                title: 'PEOPLE IN THE STREET 24',
+                year: '2025',
+                description: 'Zürch-Niederdorf-47,37377°N,8,54473°E',
+                image: 'IMMAGINI/archive/24.jpg'
+            },
+            {
+                id: 'archive-25',
+                source: 'archive',
+                title: 'PEOPLE IN THE STREET 25',
+                year: '2025',
+                description: 'Zürch-47,39107°N,8,53649°E',
+                image: 'IMMAGINI/archive/25.jpeg'
+            },
+            {
+                id: 'archive-26',
+                source: 'archive',
+                title: 'PEOPLE IN THE STREET 26',
+                year: '2025',
+                description: 'Cogoleto-44,38847°N,8,64298°E',
+                image: 'IMMAGINI/archive/26.jpeg'
+            },
+            {
+                id: 'archive-27',
+                source: 'archive',
+                title: 'PEOPLE IN THE STREET 27',
+                year: '2026',
+                description: 'Santarcangelo-44,06458°N,12,44535°E',
+                image: 'IMMAGINI/archive/27.jpeg'
+            },
+            {
+                id: 'archive-28',
+                source: 'archive',
+                title: 'PEOPLE IN THE STREET 28',
+                year: '2024',
+                description: 'Sihlfeld-47,37359°N,8,51976°E',
+                image: 'IMMAGINI/archive/28.jpg'
+            },
+            {
+                id: 'archive-29',
+                source: 'archive',
+                title: 'PEOPLE IN THE STREET 29',
+                year: '2022',
+                description: 'Châtelet-Les Halles-48,86216°N,2,34565°E',
+                image: 'IMMAGINI/archive/29.jpg'
+            },
+            {
+                id: 'archive-30',
+                source: 'archive',
+                title: 'PEOPLE IN THE STREET 30',
+                year: '2025',
+                description: 'Santarcangelo-44,06351°N,12,44650°E',
+                image: 'IMMAGINI/archive/30.jpg'
+            },
+            {
+                id: 'archive-31',
+                source: 'archive',
+                title: 'PEOPLE IN THE STREET 31',
+                year: '2024',
+                description: 'Hovet-59,29500°N,18,08274°E',
+                image: 'IMMAGINI/archive/31.jpg'
+            }
+        ];
+
+        // Mix in ordine randomico di tutte le fotografie di Design e Archive
+        function createMixedShuffledFeed() {
+            const pool = [
+                ...designItems.map((item, originalIndex) => ({ ...item, originalIndex })),
+                ...archiveItems.map((item, originalIndex) => ({ ...item, originalIndex }))
+            ];
+            for (let i = pool.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [pool[i], pool[j]] = [pool[j], pool[i]];
+            }
+            return pool;
+        }
+
+        const mixedSlides = createMixedShuffledFeed();
+
+        // Elementi DOM
+        const landingView = document.getElementById('landingView');
+        const landingSlideshowContainer = document.getElementById('landingSlideshowContainer');
+        const mainStage = document.getElementById('mainStage');
+        const rightFeedPane = document.getElementById('rightFeedPane');
+        const continuousStream = document.getElementById('continuousStream');
+
+        const navDesignBtn = document.getElementById('navDesignBtn');
+        const navArchiveBtn = document.getElementById('navArchiveBtn');
+
+        const contactsOverlay = document.getElementById('contactsOverlay');
+        const aboutOverlay = document.getElementById('aboutOverlay');
+
+        let currentSlideIdx = 0;
+        let slideshowInterval = null;
+
+        // Inizializza slideshow autonomo centrale della landing page con click navigation
+        function initLandingSlideshow() {
+            landingSlideshowContainer.innerHTML = '';
+            mixedSlides.forEach((item, index) => {
+                const slide = document.createElement('div');
+                slide.className = `slideshow-slide ${index === 0 ? 'active' : ''}`;
+                slide.title = `Vai a ${item.source.toUpperCase()} — ${item.title}`;
+                slide.innerHTML = `<img src="${item.image}" alt="${item.title}" loading="${index < 2 ? 'eager' : 'lazy'}" />`;
+
+                // Cliccando sull'immagine centrale si accede alla sezione di provenienza (Design o Archive)
+                slide.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    showSplitSection(item.source, item.originalIndex);
+                });
+
+                landingSlideshowContainer.appendChild(slide);
+            });
+
+            startSlideshowTimer();
+        }
+
+        function startSlideshowTimer() {
+            if (slideshowInterval) clearInterval(slideshowInterval);
+            slideshowInterval = setInterval(() => {
+                const slides = landingSlideshowContainer.querySelectorAll('.slideshow-slide');
+                if (!slides.length) return;
+                slides[currentSlideIdx].classList.remove('active');
+                currentSlideIdx = (currentSlideIdx + 1) % slides.length;
+                slides[currentSlideIdx].classList.add('active');
+            }, 3000);
+        }
+
+        function stopSlideshowTimer() {
+            if (slideshowInterval) {
+                clearInterval(slideshowInterval);
+                slideshowInterval = null;
+            }
+        }
+
+        // Mostra la Landing Page (ripristino al click di BENEDETTA CAPANNI *)
+        function showLandingPage() {
+            contactsOverlay.classList.remove('active');
+            aboutOverlay.classList.remove('active');
+            mainStage.classList.remove('active-stage');
+            landingView.classList.remove('hidden-view');
+            startSlideshowTimer();
+        }
+
+        // Mostra la schermata split (Design o Archive) e posiziona sul look specifico se indicato
+        function showSplitSection(sectionName, targetIdx = null) {
+            stopSlideshowTimer();
+            landingView.classList.add('hidden-view');
+            contactsOverlay.classList.remove('active');
+            aboutOverlay.classList.remove('active');
+            mainStage.classList.add('active-stage');
+
+            const items = sectionName === 'archive' ? archiveItems : designItems;
+
+            if (sectionName === 'archive') {
+                navArchiveBtn.classList.add('active');
+                navDesignBtn.classList.remove('active');
+            } else {
+                navDesignBtn.classList.add('active');
+                navArchiveBtn.classList.remove('active');
+            }
+
+            // Render delle immagini a destra con testo verticale personalizzato per ogni singola immagine
+            continuousStream.innerHTML = items.map((item, idx) => `
+                <div class="stream-card" id="${item.id}" data-idx="${idx}">
+                    <img src="${item.image}" alt="${item.title}" loading="${idx < 3 ? 'eager' : 'lazy'}" />
+                    <div class="card-overlay-text">
+                        <div class="card-overlay-title">${item.title} ${item.year}</div>
+                        <div class="card-overlay-desc">${item.description}</div>
+                    </div>
+                </div>
+            `).join('');
+
+            // Se è stata cliccata una slide specifica, scorre direttamente a quella foto
+            if (targetIdx !== null && items[targetIdx]) {
+                requestAnimationFrame(() => {
+                    const targetEl = document.getElementById(items[targetIdx].id);
+                    if (targetEl) {
+                        targetEl.scrollIntoView({ behavior: 'instant', block: 'start' });
+                    } else {
+                        rightFeedPane.scrollTo({ top: 0, behavior: 'instant' });
+                    }
+                });
+            } else {
+                rightFeedPane.scrollTo({ top: 0, behavior: 'instant' });
+            }
+        }
+
+        // Mostra overlay Contacts
+        function showContactsView() {
+            stopSlideshowTimer();
+            landingView.classList.add('hidden-view');
+            mainStage.classList.remove('active-stage');
+            aboutOverlay.classList.remove('active');
+            contactsOverlay.classList.add('active');
+        }
+
+        // Mostra overlay About
+        function showAboutView() {
+            stopSlideshowTimer();
+            landingView.classList.add('hidden-view');
+            mainStage.classList.remove('active-stage');
+            contactsOverlay.classList.remove('active');
+            aboutOverlay.classList.add('active');
+        }
+
+        function bindEventListeners() {
+            // Click su tutte le voci "BENEDETTA CAPANNI *" -> Ritorna alla Landing Page
+            document.querySelectorAll('.btn-home').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showLandingPage();
+                });
+            });
+
+            // Navigazione dalla Landing Page
+            document.getElementById('landingToDesignBtn').addEventListener('click', () => showSplitSection('design'));
+            document.getElementById('landingToArchiveBtn').addEventListener('click', () => showSplitSection('archive'));
+            document.getElementById('landingToAboutBtn').addEventListener('click', showAboutView);
+            document.getElementById('landingToContactsBtn').addEventListener('click', showContactsView);
+
+            // Navigazione dallo Split Screen
+            navDesignBtn.addEventListener('click', () => showSplitSection('design'));
+            navArchiveBtn.addEventListener('click', () => showSplitSection('archive'));
+            document.getElementById('navAboutBtn').addEventListener('click', showAboutView);
+            document.getElementById('navContactsBtn').addEventListener('click', showContactsView);
+
+            // Navigazione da Contacts
+            document.getElementById('contactsToDesignBtn').addEventListener('click', () => showSplitSection('design'));
+            document.getElementById('contactsToArchiveBtn').addEventListener('click', () => showSplitSection('archive'));
+            document.getElementById('contactsToAboutBtn').addEventListener('click', showAboutView);
+
+            // Navigazione da About
+            document.getElementById('aboutToDesignBtn').addEventListener('click', () => showSplitSection('design'));
+            document.getElementById('aboutToArchiveBtn').addEventListener('click', () => showSplitSection('archive'));
+            document.getElementById('aboutToContactsBtn').addEventListener('click', showAboutView);
+
+            // Tasto Esc per tornare sempre alla Landing
+            window.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    showLandingPage();
+                }
+            });
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            initLandingSlideshow();
+            bindEventListeners();
+        });
+    </script>
+</body>
+</html>
