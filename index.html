@@ -535,9 +535,13 @@
             }
 
             #aboutOverlay .about-text,
-            #aboutOverlay .about-credits > span.base-text,
             #contactsOverlay .flex-1 .base-text {
                 max-width: 50vw;
+            }
+
+            /* Riga dei crediti su una sola riga (entra sempre: il testo scala con lo schermo) */
+            #aboutOverlay .about-credits > span.base-text {
+                white-space: nowrap;
             }
 
             #aboutOverlay .about-text br {
